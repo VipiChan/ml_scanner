@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0",
+  "contracts": {
+    "raw_mtf": ["ts", "symbol", "instrument_token", "open", "high", "low", "close", "volume", "interval", "source"],
+    "labeled_panel": ["symbol", "ts", "y", "y_reason", "fwd_mfe", "fwd_mae", "bars_to_outcome"],
+    "scan": ["symbol", "asof_ts", "score", "p_win", "entry_px", "sl_px", "tp_px", "atr", "adtv_20", "rank"],
+    "blotter": ["symbol", "entry_ts", "exit_ts", "entry_px", "exit_px", "qty", "side", "reason", "gross_pnl", "costs", "net_pnl"]
+  }
+}

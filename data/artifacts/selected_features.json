@@ -1,0 +1,98 @@
+{
+  "features": [
+    "CCI",
+    "BULLP_13",
+    "FISHERTs_9_1",
+    "INERTIA",
+    "J_9_3",
+    "KSTs_9",
+    "MACDs_12_26_9",
+    "SMIo_5_20_5_1.0",
+    "STC_10_12_26_0.5",
+    "TRIX_30_9",
+    "HILOs_13_21",
+    "SUPERTs_7_3.0",
+    "KURTOSIS",
+    "SKEW",
+    "TOS_STDEVALL_L_2",
+    "ADX_14",
+    "DMP_14",
+    "DMN_14",
+    "CHOP",
+    "DPO",
+    "VHF",
+    "BBB_5_2.0_2.0",
+    "BBP_5_2.0_2.0",
+    "HWW_1",
+    "HWPCT_1",
+    "MASSI",
+    "NATR",
+    "RVI",
+    "UI",
+    "AD",
+    "ADOSC",
+    "OBV",
+    "CMF",
+    "EFI",
+    "EOM",
+    "KVOs_34_55_13",
+    "MFI",
+    "NVI",
+    "PVIe_255",
+    "PVOs_12_26_9",
+    "PVT",
+    "TSVs_18_10",
+    "d_rs",
+    "m15_atr"
+  ],
+  "history": [
+    {
+      "dropped": "ABER_ATR_5_15",
+      "worst": "ABER_ATR_5_15",
+      "vif": 41.68611473530912,
+      "n": 51
+    },
+    {
+      "dropped": "KST_10_15_20_30_10_10_10_15",
+      "worst": "KST_10_15_20_30_10_10_10_15",
+      "vif": 36.401359049891845,
+      "n": 50
+    },
+    {
+      "dropped": "PGO",
+      "worst": "PGO",
+      "vif": 22.289623657787118,
+      "n": 49
+    },
+    {
+      "dropped": "MEDIAN",
+      "worst": "MEDIAN",
+      "vif": 21.938562657560567,
+      "n": 48
+    },
+    {
+      "dropped": "BIAS",
+      "worst": "BIAS",
+      "vif": 17.34755671075343,
+      "n": 47
+    },
+    {
+      "dropped": "PPOs_12_26_9",
+      "worst": "PPOs_12_26_9",
+      "vif": 12.381296539603296,
+      "n": 46
+    },
+    {
+      "dropped": "TSV_18_10",
+      "worst": "TSV_18_10",
+      "vif": 11.95026769931391,
+      "n": 45
+    },
+    {
+      "dropped": null,
+      "worst": "SMIo_5_20_5_1.0",
+      "vif": 9.293630995724032,
+      "n": 44
+    }
+  ]
+}

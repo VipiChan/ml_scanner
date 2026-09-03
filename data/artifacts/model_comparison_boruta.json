@@ -1,0 +1,17 @@
+{
+  "n_features": 108,
+  "summary": [
+    {
+      "model": "XGBoost",
+      "model_key": "xgboost",
+      "accuracy": 0.7671078569417066,
+      "balanced_accuracy": 0.751469755108258,
+      "precision": 0.6194259808668547,
+      "recall": 0.6928205126120912,
+      "f1": 0.6343093576796547,
+      "roc_auc": 0.8392800151266943,
+      "n_folds": 4,
+      "n_test_total": 7102
+    }
+  ]
+}

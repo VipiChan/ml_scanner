@@ -1,0 +1,156 @@
+{
+  "features": [
+    "APO",
+    "CCI",
+    "CFO",
+    "CG",
+    "CRSI",
+    "BULLP_13",
+    "BEARP_13",
+    "INERTIA",
+    "J_9_3",
+    "KSTs_9",
+    "MACDh_12_26_9",
+    "PPOh_12_26_9",
+    "QQEs_14_5_4.236",
+    "SLOPE",
+    "STC_10_12_26_0.5",
+    "STCstoch_10_12_26_0.5",
+    "TRIX_30_9",
+    "UO",
+    "HILOl_13_21",
+    "HILOs_13_21",
+    "SUPERTs_7_3.0",
+    "ENTROPY",
+    "KURTOSIS",
+    "MAD",
+    "SKEW",
+    "TOS_STDEVALL_L_2",
+    "ZSCORE",
+    "ADX_14",
+    "DMP_14",
+    "DMN_14",
+    "CHOP",
+    "DPO",
+    "PSARs_0.02_0.2",
+    "VHF",
+    "ZIGZAGs_5.0%_10",
+    "BBB_5_2.0_2.0",
+    "BBP_5_2.0_2.0",
+    "HWW_1",
+    "HWPCT_1",
+    "MASSI",
+    "NATR",
+    "RVI",
+    "UI",
+    "AD",
+    "ADOSC",
+    "OBV",
+    "CMF",
+    "EFI",
+    "EOM",
+    "KVO_34_55_13",
+    "KVOs_34_55_13",
+    "MFI",
+    "NVI",
+    "PVIe_255",
+    "PVOh_12_26_9",
+    "PVOs_12_26_9",
+    "TSVs_18_10",
+    "d_rs",
+    "m15_rsi",
+    "m15_atr"
+  ],
+  "history": [
+    {
+      "dropped": "PVO_12_26_9",
+      "worst": "PVO_12_26_9",
+      "vif": 1000799917193443.5,
+      "n": 74
+    },
+    {
+      "dropped": "HILO_13_21",
+      "worst": "HILO_13_21",
+      "vif": 702.2767812379338,
+      "n": 73
+    },
+    {
+      "dropped": "BIAS",
+      "worst": "BIAS",
+      "vif": 235.62386274318894,
+      "n": 72
+    },
+    {
+      "dropped": "KST_10_15_20_30_10_10_10_15",
+      "worst": "KST_10_15_20_30_10_10_10_15",
+      "vif": 51.19790921874531,
+      "n": 71
+    },
+    {
+      "dropped": "CMO",
+      "worst": "CMO",
+      "vif": 45.94604325937848,
+      "n": 70
+    },
+    {
+      "dropped": "SUPERTl_7_3.0",
+      "worst": "SUPERTl_7_3.0",
+      "vif": 28.247259398662106,
+      "n": 69
+    },
+    {
+      "dropped": "PGO",
+      "worst": "PGO",
+      "vif": 24.450735847425168,
+      "n": 68
+    },
+    {
+      "dropped": "TSIs_13_25_13",
+      "worst": "TSIs_13_25_13",
+      "vif": 22.521606434608202,
+      "n": 67
+    },
+    {
+      "dropped": "ABER_ATR_5_15",
+      "worst": "ABER_ATR_5_15",
+      "vif": 20.961220659068104,
+      "n": 66
+    },
+    {
+      "dropped": "MACD_12_26_9",
+      "worst": "MACD_12_26_9",
+      "vif": 20.76586636263154,
+      "n": 65
+    },
+    {
+      "dropped": "PPOs_12_26_9",
+      "worst": "PPOs_12_26_9",
+      "vif": 16.373798120316057,
+      "n": 64
+    },
+    {
+      "dropped": "QQE_14_5_4.236",
+      "worst": "QQE_14_5_4.236",
+      "vif": 11.849313045757537,
+      "n": 63
+    },
+    {
+      "dropped": "TSV_18_10",
+      "worst": "TSV_18_10",
+      "vif": 11.838942015243555,
+      "n": 62
+    },
+    {
+      "dropped": "SMIo_5_20_5_1.0",
+      "worst": "SMIo_5_20_5_1.0",
+      "vif": 10.940911427991887,
+      "n": 61
+    },
+    {
+      "dropped": null,
+      "worst": "KSTs_9",
+      "vif": 8.368314061816546,
+      "n": 60
+    }
+  ]
+}

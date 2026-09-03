@@ -1,0 +1,60 @@
+{
+  "features": [
+    "CTI",
+    "BULLP_13",
+    "INERTIA",
+    "J_9_3",
+    "KST_10_15_20_30_10_10_10_15",
+    "QQE_14_5_4.236_RSIMA",
+    "SMIo_5_20_5_1.0",
+    "TRIX_30_9",
+    "HILOs_13_21",
+    "KURTOSIS",
+    "SKEW",
+    "ADX_14",
+    "DMN_14",
+    "CHOP",
+    "DPO",
+    "HT_TRENDLINE",
+    "HWW_1",
+    "MASSI",
+    "NATR",
+    "RVI",
+    "UI",
+    "AD",
+    "OBV",
+    "CMF",
+    "KVO_34_55_13",
+    "KVOs_34_55_13",
+    "NVI",
+    "PVT",
+    "TSV_18_10",
+    "m15_rsi"
+  ],
+  "history": [
+    {
+      "dropped": "VIDYA",
+      "worst": "VIDYA",
+      "vif": 39.25744094496089,
+      "n": 33
+    },
+    {
+      "dropped": "PGO",
+      "worst": "PGO",
+      "vif": 23.925125074684757,
+      "n": 32
+    },
+    {
+      "dropped": "d_atr",
+      "worst": "d_atr",
+      "vif": 17.078215660947127,
+      "n": 31
+    },
+    {
+      "dropped": null,
+      "worst": "QQE_14_5_4.236_RSIMA",
+      "vif": 9.335078286039884,
+      "n": 30
+    }
+  ]
+}

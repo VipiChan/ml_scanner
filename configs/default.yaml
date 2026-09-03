@@ -1,0 +1,83 @@
+universe:
+  index_name: NIFTY500
+  constituents_url: https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv
+  series: EQ
+  benchmark_symbol: "NIFTY 50"
+  exchange: NSE
+
+data:
+  daily_days: 730
+  hourly_days: 730
+  minute15_days: 90
+  smoke_hourly_days: 90
+  parquet_export_dir: data/artifacts
+
+timescale:
+  host: localhost
+  port: 5433
+  db: scan_trade
+  chunk_5m: 7d
+  compress_after: 14d
+  cagg_refresh_minutes: 1
+  ca_rel_diff: 0.02
+
+liquidity:
+  adtv_window: 20
+  adtv_min_inr: 50000000
+  smoke_n: 8
+
+features:
+  hourly_mode: full
+  atr_period: 14
+  daily_ema_fast: 50
+  daily_ema_slow: 200
+  daily_rs_lookback: 63
+  m15_rsi_length: 14
+  missing_threshold: 0.10
+
+target:
+  atr_col: ATR
+  sl_mult: 2.0
+  tp_r: 2.0
+  max_sessions: 10
+  stop_wins_same_bar: true
+
+ml:
+  model: lightgbm
+  n_splits: 4
+  embargo_sessions: 10
+  max_vif: 10.0
+  boruta_max_iter: 50
+  random_state: 42
+  score_threshold: 0.55
+  use_class_weight: true
+
+risk:
+  risk_frac: 0.01
+  max_concurrent: 5
+  max_hold_sessions: 10
+  starting_equity: 1000000.0
+  exit_on_stop: true
+  exit_on_target: true
+  exit_on_time_stop: true
+
+costs:
+  product: CNC
+  slippage_pct_per_side: 0.0003
+  brokerage_pct: 0.0
+  brokerage_flat_cap: 20.0
+  stt_buy_pct: 0.001
+  stt_sell_pct: 0.001
+  stamp_buy_pct: 0.00015
+  nse_txn_pct: 0.0000307
+  sebi_per_crore: 10.0
+  gst_pct: 0.18
+  dp_sell_flat: 15.34
+  ipft_per_crore: 0.01
+
+backtest:
+  fill: next_open
+  stop_wins_same_bar: true
+  rf_annual: 0.0
+  trading_days_per_year: 252
+  max_dd_constraint: -0.25
