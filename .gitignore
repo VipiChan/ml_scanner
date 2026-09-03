@@ -16,3 +16,6 @@ build/
 *.egg-info/
 .DS_Store
 .ml_env/
+data/artifacts/**/*.parquet
+data/artifacts/**/*.joblib
+data/artifacts/**/*.html
