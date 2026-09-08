@@ -1,0 +1,117 @@
+{
+  "features": [
+    "REFLEX",
+    "CCI",
+    "CFO",
+    "CG",
+    "CRSI",
+    "CTI",
+    "BEARP_13",
+    "FISHERTs_9_1",
+    "J_9_3",
+    "KSTs_9",
+    "MACDs_12_26_9",
+    "MOM",
+    "PPOh_12_26_9",
+    "SLOPE",
+    "TRIX_30_9",
+    "UO",
+    "HILOs_13_21",
+    "LOG_RETURN",
+    "ENTROPY",
+    "MAD",
+    "SKEW",
+    "TOS_STDEVALL_L_3",
+    "ZSCORE",
+    "DMP_14",
+    "DMN_14",
+    "AROOND_14",
+    "CHOP",
+    "DPO",
+    "PSARl_0.02_0.2",
+    "VHF",
+    "ZIGZAGs_5.0%_10",
+    "BBB_5_2.0_2.0",
+    "BBP_5_2.0_2.0",
+    "HWW_1",
+    "HWPCT_1",
+    "MASSI",
+    "NATR",
+    "RVI",
+    "THERMO_20_2_0.5",
+    "TRUE_RANGE",
+    "UI",
+    "AD",
+    "CMF",
+    "NVI",
+    "PVIe_255",
+    "PVOh_12_26_9",
+    "PVOL",
+    "PVT",
+    "TSVs_18_10",
+    "d_rs",
+    "m15_atr"
+  ],
+  "history": [
+    {
+      "dropped": "BULLP_13",
+      "worst": "BULLP_13",
+      "vif": 109.78944543603093,
+      "n": 60
+    },
+    {
+      "dropped": "COPPOCK",
+      "worst": "COPPOCK",
+      "vif": 46.97042819285713,
+      "n": 59
+    },
+    {
+      "dropped": "PGO",
+      "worst": "PGO",
+      "vif": 29.521376235321974,
+      "n": 58
+    },
+    {
+      "dropped": "ABER_ATR_5_15",
+      "worst": "ABER_ATR_5_15",
+      "vif": 29.193394608644656,
+      "n": 57
+    },
+    {
+      "dropped": "TRENDFLEX",
+      "worst": "TRENDFLEX",
+      "vif": 15.016751442123365,
+      "n": 56
+    },
+    {
+      "dropped": "STOCHFk_14_3",
+      "worst": "STOCHFk_14_3",
+      "vif": 14.151019254283991,
+      "n": 55
+    },
+    {
+      "dropped": "TOS_STDEVALL_LR",
+      "worst": "TOS_STDEVALL_LR",
+      "vif": 14.100019992933447,
+      "n": 54
+    },
+    {
+      "dropped": "MACDh_12_26_9",
+      "worst": "MACDh_12_26_9",
+      "vif": 10.826056801411802,
+      "n": 53
+    },
+    {
+      "dropped": "SMIo_5_20_5_1.0",
+      "worst": "SMIo_5_20_5_1.0",
+      "vif": 10.66323313573797,
+      "n": 52
+    },
+    {
+      "dropped": null,
+      "worst": "CTI",
+      "vif": 8.838335861367478,
+      "n": 51
+    }
+  ]
+}

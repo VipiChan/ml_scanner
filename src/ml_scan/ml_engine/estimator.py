@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from functools import lru_cache
 from typing import Any, Literal
 
 import numpy as np
@@ -22,6 +23,59 @@ MODEL_LABELS: dict[str, str] = {
     "xgboost": "XGBoost",
     "rf": "RandomForest",
 }
+
+
+@lru_cache(maxsize=1)
+def gpu_available() -> bool:
+    """True when an NVIDIA GPU is visible (Colab T4/A100, local CUDA, etc.)."""
+    try:
+        import subprocess
+
+        result = subprocess.run(
+            ["nvidia-smi"],
+            capture_output=True,
+            timeout=8,
+            check=False,
+        )
+        return result.returncode == 0
+    except Exception:
+        return False
+
+
+@lru_cache(maxsize=1)
+def lightgbm_gpu_available() -> bool:
+    """Pip LightGBM wheels are usually CPU-only; probe a 1-tree GPU fit."""
+    if not gpu_available():
+        return False
+    try:
+        from lightgbm import LGBMClassifier
+
+        model = LGBMClassifier(n_estimators=1, max_depth=2, device="gpu", verbose=-1)
+        x = np.array([[0.0, 1.0], [1.0, 0.0], [0.5, 0.5], [0.2, 0.8]], dtype=float)
+        y = np.array([0, 1, 0, 1])
+        model.fit(x, y)
+        return True
+    except Exception:
+        return False
+
+
+def accelerator_params(name: str) -> dict[str, Any]:
+    """Device kwargs for tree models. Empty on CPU. XGBoost pip wheels use CUDA;
+    LightGBM pip wheels usually do not — those stay on CPU unless a GPU build is installed.
+    """
+    if name == "xgboost" and gpu_available():
+        return {"tree_method": "hist", "device": "cuda"}
+    if name == "lightgbm" and lightgbm_gpu_available():
+        return {"device": "gpu"}
+    return {}
+
+
+def describe_accelerator() -> str:
+    if not gpu_available():
+        return "CPU (no NVIDIA GPU visible; in Colab: Runtime > Change runtime type > T4 GPU)"
+    if lightgbm_gpu_available():
+        return "GPU: XGBoost CUDA + LightGBM GPU"
+    return "GPU: XGBoost CUDA (LightGBM pip wheel is CPU-only on this runtime)"
 
 
 def _default_params(name: Literal["lightgbm", "xgboost", "rf"], random_state: int) -> dict[str, Any]:
@@ -62,6 +116,7 @@ def _build_model(
 ):
     """Build a fresh, unfitted estimator. `params` overrides only the keys it sets."""
     merged = _default_params(name, random_state)
+    merged.update(accelerator_params(name))
     if params:
         merged.update(params)
     if name == "lightgbm":

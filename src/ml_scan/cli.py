@@ -1,4 +1,4 @@
-"""Typer CLI: coverage, universe, features, train, scan, backtest, report, e2e."""
+"""Typer CLI: coverage, universe, data, features, ml (compare/boruta/vif/optimize/train), scan, backtest, report, e2e."""
 
 from __future__ import annotations
 
@@ -110,8 +110,11 @@ def ml_boruta(
     out: Path = typer.Option(..., "--out"),
     max_iter: int = typer.Option(50, "--max-iter"),
     estimator_name: str = typer.Option(None, "--estimator-name", help="rf | xgboost | lightgbm; default = configured model"),
+    sample_rows: int = typer.Option(None, "--sample-rows", help="Subsample rows (spread across symbols) before fitting; large universes only"),
 ) -> None:
-    dest = ops.ml_boruta(load_settings(), inbound=inbound, out=out, max_iter=max_iter, estimator_name=estimator_name)
+    dest = ops.ml_boruta(
+        load_settings(), inbound=inbound, out=out, max_iter=max_iter, estimator_name=estimator_name, sample_rows=sample_rows
+    )
     typer.echo(f"wrote {dest}")
 
 
@@ -120,8 +123,9 @@ def ml_compare(
     inbound: Path = typer.Option(..., "--in"),
     features: Path = typer.Option(None, "--features", help="Feature list JSON; omit to use every QC'd feature"),
     out: Path = typer.Option(None, "--out"),
+    sample_rows: int = typer.Option(None, "--sample-rows", help="Subsample rows (spread across symbols) before fitting; large universes only"),
 ) -> None:
-    ops.ml_compare_models(load_settings(), inbound=inbound, features=features, out=out)
+    ops.ml_compare_models(load_settings(), inbound=inbound, features=features, out=out, sample_rows=sample_rows)
 
 
 @ml_app.command("optimize")
@@ -131,8 +135,11 @@ def ml_optimize(
     model_name: str = typer.Option(..., "--model", help="rf | xgboost | lightgbm"),
     out: Path = typer.Option(..., "--out"),
     n_iter: int = typer.Option(20, "--n-iter"),
+    sample_rows: int = typer.Option(None, "--sample-rows", help="Subsample rows (spread across symbols) before searching; large universes only"),
 ) -> None:
-    dest = ops.ml_optimize(load_settings(), inbound=inbound, features=features, model_name=model_name, out=out, n_iter=n_iter)
+    dest = ops.ml_optimize(
+        load_settings(), inbound=inbound, features=features, model_name=model_name, out=out, n_iter=n_iter, sample_rows=sample_rows
+    )
     typer.echo(f"wrote {dest}")
 
 
@@ -165,8 +172,12 @@ def scan_cmd(
     asof: str = typer.Option("latest", "--asof"),
     universe: Path = typer.Option(..., "--universe"),
     out: Path = typer.Option(..., "--out"),
+    model_path: Path = typer.Option(None, "--model-path", help="Default: data/artifacts/model.joblib"),
+    features_path: Path = typer.Option(None, "--features-path", help="Default: data/artifacts/selected_features.json"),
 ) -> None:
-    dest = ops.scan_latest(load_settings(), asof=asof, universe=universe, out=out)
+    dest = ops.scan_latest(
+        load_settings(), asof=asof, universe=universe, out=out, model_path=model_path, features_path=features_path
+    )
     typer.echo(f"wrote {dest}")
 
 
@@ -176,8 +187,12 @@ def backtest_run(
     start: str = typer.Option(..., "--start"),
     end: str = typer.Option(..., "--end"),
     out: Path = typer.Option(..., "--out"),
+    model_path: Path = typer.Option(None, "--model-path", help="Default: data/artifacts/model.joblib"),
+    features_path: Path = typer.Option(None, "--features-path", help="Default: data/artifacts/selected_features.json"),
 ) -> None:
-    dest = ops.backtest_run(load_settings(), signals=signals, start=start, end=end, out=out)
+    dest = ops.backtest_run(
+        load_settings(), signals=signals, start=start, end=end, out=out, model_path=model_path, features_path=features_path
+    )
     typer.echo(f"wrote {dest}")
 
 
@@ -190,8 +205,9 @@ def backtest_metrics(run: Path = typer.Option(..., "--run")) -> None:
 def report_cmd(
     run: Path = typer.Option(..., "--run"),
     out: Path = typer.Option(..., "--out"),
+    model_path: Path = typer.Option(None, "--model-path", help="Default: data/artifacts/model.joblib"),
 ) -> None:
-    dest = ops.write_report(run, out)
+    dest = ops.write_report(run, out, model_path=model_path)
     typer.echo(f"wrote {dest}")
 
 
@@ -205,17 +221,6 @@ def e2e_smoke() -> None:
 def e2e_liquid(max_symbols: int = typer.Option(80, "--max-symbols")) -> None:
     dest = ops.e2e_liquid(load_settings(), max_symbols=max_symbols)
     typer.echo(f"ok {dest}")
-
-
-@app.command("train")
-def train_alias(
-    inbound: Path = typer.Option(..., "--in"),
-    features: Path = typer.Option(..., "--features"),
-    out: Path = typer.Option(..., "--out"),
-) -> None:
-    """Top-level alias matching the runbook `ml-scan train` wording."""
-    dest = ops.ml_train(load_settings(), inbound=inbound, features=features, out=out)
-    typer.echo(f"wrote {dest}")
 
 
 if __name__ == "__main__":

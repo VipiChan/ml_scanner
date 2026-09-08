@@ -10,6 +10,8 @@
 
 The work is split into **25 small milestones**. Each one unlocks a single, checkable capability. You can follow the project in order without needing programming knowledge.
 
+> **Note on the training universe (current setup):** milestones 5, 6, and 25 describe optional local-universe tooling (`universe snapshot`, `universe liquid`, `e2e liquid`) that this repo still supports, but the actual training symbol list is now owned by a separate project (`scan_trade`) and frozen into `model_training_symbol.csv`, refreshed there whenever the model is retrained. Day-to-day feature building, training, and scanning (milestones 9 onward) point at that file instead of the local Nifty 500 / liquidity CSVs. See `user_command.md` for the exact commands in use.
+
 ---
 
 ## How to read each milestone
@@ -80,7 +82,7 @@ Reading a month of RELIANCE hourly data returns the expected price columns, mark
 
 ## Phase B — Which stocks are we allowed to trade?
 
-### Milestone 5 — Bring the Nifty 500 list into this project
+### Milestone 5 — Bring the Nifty 500 list into this project *(optional; not part of the current training path — see note above)*
 
 **What we are building**  
 A local snapshot of the Nifty 500 symbol map copied into this project’s own data folder.
@@ -93,7 +95,7 @@ A Nifty 500 mapping file exists locally with roughly **495** mapped symbols.
 
 ---
 
-### Milestone 6 — Keep only liquid names
+### Milestone 6 — Keep only liquid names *(optional; not part of the current training path — see note above)*
 
 **What we are building**  
 A liquidity screen that keeps stocks whose recent average daily traded value is high enough (target: above ₹5 crore), plus a tiny “smoke” list of a few symbols for fast trial runs.
@@ -333,7 +335,7 @@ A single command-line entry point that exposes the main jobs of the system: univ
 A pile of scripts is hard to operate. One coherent product surface is how you run the system day to day without hunting through notebooks.
 
 **How we know it is done**  
-Asking the tool for help lists the expected command groups for coverage, universe, features, train, scan, backtest, and report.
+Asking the tool for help lists the expected command groups: coverage, universe, data, features, ml (compare/boruta/vif/optimize/train), scan, backtest, report, and e2e.
 
 ---
 
@@ -350,7 +352,7 @@ The end-to-end smoke command finishes successfully and writes artefacts under a 
 
 ---
 
-### Milestone 25 — Larger liquid-universe stress run
+### Milestone 25 — Larger liquid-universe stress run *(optional scale-up rehearsal; the production model is trained on the full external universe, not this capped subset)*
 
 **What we are building**  
 The same full pipeline on a larger liquid subset (capped, for example around eighty symbols), closer to real operating breadth than the tiny smoke list.

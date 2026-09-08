@@ -69,24 +69,3 @@ class NSECalendar:
             nanosecond=0,
         )
         return pd.date_range(start=local, periods=periods, freq=freq, tz=NSE_TZ)
-
-
-def last_completed_daily(
-    asof: pd.Timestamp,
-    buffer_minutes: int = 15,
-    calendar: NSECalendar | None = None,
-) -> pd.Timestamp:
-    """Last session whose daily bar is usable (15:30 IST + buffer, default 15:45)."""
-    cal = calendar or NSECalendar()
-    local = ensure_ist(asof)
-    close = local.replace(hour=15, minute=30, second=0, microsecond=0, nanosecond=0)
-    cutover = close + pd.Timedelta(minutes=buffer_minutes)
-    cursor = local.normalize()
-    if local >= cutover and cal.is_trading_day(cursor):
-        return cursor
-    probe = cursor - pd.Timedelta(days=1)
-    for _ in range(14):
-        if cal.is_trading_day(probe):
-            return probe.normalize()
-        probe -= pd.Timedelta(days=1)
-    return cursor

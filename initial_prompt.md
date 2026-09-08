@@ -1,3 +1,5 @@
+> **Historical document.** This was the original planning prompt (Sep 2025) used to design the milestone plan in `project_milestones.md`. It reflects intent at project start, not the current implementation — e.g. the training universe now comes from an external `scan_trade` freeze rather than the local Nifty 500 snapshot described below. Kept for context only.
+
 Act as a Principal Quantitative Software Engineer and Systems Architect. I am building a modular, production-grade Multi-Timeframe (MTF) Machine Learning-Driven Stock Scanner, Backtesting Engine, and Execution Pipeline in Python for the Nifty 500 universe.
 
 **CRITICAL CONTEXT - EXISTING ASSETS:**

@@ -1,0 +1,6 @@
+(0, 'TRAINING', '', '# ml_scan milestone gates')
+(1, 'TRAINING', 'SMOKE', 'from pathlib import Path')
+(19, 'TRAINING', '', 'import subprocess, sys')
+(20, 'TRAINING', '', '### M09b — Which stocks feed the model, and how many pandas_ta features it adds ')
+(21, 'TRAINING', '', 'import pandas as pd')
+(51, 'TRAINING', '', 'import subprocess, sys')

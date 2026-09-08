@@ -11,7 +11,6 @@ from ml_scan.backtest.engine import Backtester
 from ml_scan.backtest.metrics import compute_metrics, equity_to_frame
 from ml_scan.config import Settings, load_settings, project_root
 from ml_scan.data.liquidity import filter_universe
-from ml_scan.data.schemas import MTFBundle
 from ml_scan.data.timescale_adapter import TimescaleAdapter
 from ml_scan.data.universe import (
     copy_snapshot,
@@ -62,6 +61,24 @@ def _write_table(frame: pd.DataFrame, path: Path | str) -> Path:
     else:
         frame.to_csv(dest, index=False)
     return dest
+
+
+def _stratified_sample(panel: pd.DataFrame, sample_rows: int | None, *, random_state: int = 42) -> pd.DataFrame:
+    """Row-subsample spread evenly across symbols, for the compute-heavy selection/search
+    stages (`ml compare`, `ml boruta`, `ml optimize`) on large universes. The final `ml train`
+    fit always uses the full panel passed to it -- this helper is never applied there."""
+    if not sample_rows or len(panel) <= sample_rows or "symbol" not in panel.columns:
+        return panel
+    n_symbols = max(1, panel["symbol"].nunique())
+    per_symbol = max(1, sample_rows // n_symbols)
+    parts = [
+        group.sample(n=min(len(group), per_symbol), random_state=random_state)
+        for _, group in panel.groupby("symbol", sort=False)
+    ]
+    return pd.concat(parts, ignore_index=True)
+
+
+stratified_sample = _stratified_sample
 
 
 def coverage(settings: Settings | None = None, symbols: str = "RELIANCE") -> pd.DataFrame:
@@ -208,7 +225,17 @@ def features_qc(
         missing_threshold=settings.features.missing_threshold,
         out_path=_resolve(out),
     )
-    print(json.dumps({"n_rows": report["n_rows"], "n_feature_cols": report["n_feature_cols"], "leakage_ok": report["leakage"]["ok"]}, indent=2))
+    print(
+        json.dumps(
+            {
+                "n_rows": report["n_rows"],
+                "n_feature_cols": report["n_feature_cols"],
+                "leakage_ok": report["leakage"]["ok"],
+                "n_leakage_suspects_excluded": len(report["dropped_leakage_suspects"]),
+            },
+            indent=2,
+        )
+    )
     return _resolve(out)
 
 
@@ -219,9 +246,11 @@ def ml_boruta(
     out: Path | str,
     max_iter: int | None = None,
     estimator_name: str | None = None,
+    sample_rows: int | None = None,
 ) -> Path:
     settings = settings or load_settings()
     panel = _read_table(inbound)
+    panel = _stratified_sample(panel, sample_rows, random_state=settings.ml.random_state)
     X, y = training_xy(panel)
     selector = BorutaSelector(
         max_iter=int(max_iter or settings.ml.boruta_max_iter),
@@ -287,6 +316,7 @@ def ml_compare_models(
     inbound: Path | str,
     features: Path | str | list[str] | None = None,
     out: Path | str | None = None,
+    sample_rows: int | None = None,
 ) -> pd.DataFrame:
     """Baseline check: fit every candidate model on the same feature set and folds.
 
@@ -297,6 +327,7 @@ def ml_compare_models(
     """
     settings = settings or load_settings()
     panel = _read_table(inbound)
+    panel = _stratified_sample(panel, sample_rows, random_state=settings.ml.random_state)
     keep = features if isinstance(features, list) else (load_feature_list(features) if features else None)
     X, y, work = select_xy(panel, keep)
     splitter = PurgedWalkForward(n_splits=settings.ml.n_splits, embargo_sessions=settings.ml.embargo_sessions)
@@ -319,10 +350,12 @@ def ml_optimize(
     model_name: str,
     out: Path | str,
     n_iter: int = 20,
+    sample_rows: int | None = None,
 ) -> Path:
     """Randomized hyperparameter search scored on the same purged walk-forward folds."""
     settings = settings or load_settings()
     panel = _read_table(inbound)
+    panel = _stratified_sample(panel, sample_rows, random_state=settings.ml.random_state)
     keep = load_feature_list(features)
     X, y, work = select_xy(panel, keep)
     splitter = PurgedWalkForward(n_splits=settings.ml.n_splits, embargo_sessions=settings.ml.embargo_sessions)
@@ -383,6 +416,8 @@ def backtest_run(
     end: str,
     out: Path | str,
     labeled_path: Path | str | None = None,
+    model_path: Path | str | None = None,
+    features_path: Path | str | None = None,
 ) -> Path:
     settings = settings or load_settings()
     dest = _resolve(out)
@@ -395,9 +430,11 @@ def backtest_run(
     finally:
         adapter.close()
     if "score" not in sig.columns and labeled_path:
+        model_path = model_path or (project_root() / "data" / "artifacts" / "model.joblib")
+        features_path = features_path or (project_root() / "data" / "artifacts" / "selected_features.json")
         labeled = _read_table(labeled_path)
-        scanner = InferenceScanner(settings, estimator=load_model(project_root() / "data" / "artifacts" / "model.joblib"))
-        scanner.features = load_feature_list(project_root() / "data" / "artifacts" / "selected_features.json")
+        scanner = InferenceScanner(settings, estimator=load_model(model_path))
+        scanner.features = load_feature_list(features_path)
         scored = scanner.score_panel(labeled)
         sig = history_signals(scored, threshold=settings.ml.score_threshold)
         _write_table(sig, dest / "scan_history.parquet")

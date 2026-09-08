@@ -19,7 +19,13 @@ class PanelFeatureEngineer:
         self.mode = mode
         self.atr_period = atr_period
 
-    def transform(self, hourly: pd.DataFrame, *, group_col: str = "symbol") -> pd.DataFrame:
+    def transform(
+        self,
+        hourly: pd.DataFrame,
+        *,
+        group_col: str = "symbol",
+        progress=None,
+    ) -> pd.DataFrame:
         frame = hourly.copy()
         if frame.empty:
             return frame
@@ -29,8 +35,11 @@ class PanelFeatureEngineer:
             raise ValueError("panel is missing ts")
         frame["ts"] = frame["ts"].map(ensure_ist)
         parts: list[pd.DataFrame] = []
-        for symbol, part in frame.groupby(group_col, sort=False):
+        n_groups = int(frame[group_col].nunique())
+        for i, (symbol, part) in enumerate(frame.groupby(group_col, sort=False), start=1):
             parts.append(self._one_symbol(str(symbol), part))
+            if progress is not None:
+                progress(i, n_groups, str(symbol))
         out = pd.concat(parts, ignore_index=False)
         if not isinstance(out.index, pd.MultiIndex):
             out = out.set_index([group_col, "ts"], drop=False)

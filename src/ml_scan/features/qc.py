@@ -100,14 +100,26 @@ def run_qc(
     missing_threshold: float = 0.10,
     out_path: Path | None = None,
 ) -> tuple[pd.DataFrame, dict]:
+    """QC gate before expensive model training.
+
+    Beyond missingness/zero-variance pruning, `features` excludes any column the
+    leakage audit flags (>0.999 correlation with next-bar close) -- these are raw
+    price-level trackers (moving averages, bands, VWAP, price channels) rather than
+    look-ahead bugs, but they encode absolute price level, which varies by orders of
+    magnitude across a cross-sectional universe and gives a tree model an easy,
+    non-generalizing shortcut. `leakage.suspects` still lists them for transparency.
+    """
     cleaned = drop_low_quality_columns(df, missing_threshold=missing_threshold)
     audit = leakage_audit(cleaned)
+    suspect_cols = {s["column"] for s in audit["suspects"]}
+    safe_features = [c for c in feature_columns(cleaned) if c not in suspect_cols]
     report = {
         "n_rows": int(len(cleaned)),
-        "n_feature_cols": len(feature_columns(cleaned)),
-        "features": feature_columns(cleaned),
+        "n_feature_cols": len(safe_features),
+        "features": safe_features,
         "leakage": audit,
         "dropped_vs_input": sorted(set(df.columns) - set(cleaned.columns)),
+        "dropped_leakage_suspects": sorted(suspect_cols),
     }
     if out_path is not None:
         out_path.parent.mkdir(parents=True, exist_ok=True)

@@ -12,6 +12,7 @@ from sklearn.ensemble import RandomForestClassifier
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 from ml_scan.exceptions import ModelError
+from ml_scan.ml_engine.estimator import accelerator_params
 from ml_scan.ml_engine.metrics import class_weight_dict, scale_pos_weight
 
 
@@ -30,6 +31,7 @@ def _boruta_estimator(name: str, random_state: int, y=None):
     """
     key = name if name in BORUTA_PARAMS else "xgboost"
     params = dict(BORUTA_PARAMS[key], random_state=random_state)
+    params.update(accelerator_params(key))
     if y is not None:
         if key == "xgboost":
             params["scale_pos_weight"] = scale_pos_weight(y)

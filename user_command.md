@@ -29,13 +29,11 @@ python -c "import pandas as pd; from ml_scan.data.calendar import NSECalendar; c
 python -c "from ml_scan.data.timescale_adapter import TimescaleAdapter; from ml_scan.config import load_settings; a=TimescaleAdapter(load_settings()); df=a.read(['RELIANCE'], '60minute', '2025-09-01', '2026-09-03'); print(df.columns.tolist(), len(df), df['interval'].unique())"
 # expect: standard OHLCV columns, interval == 60minute, no 15:15 partial hours; use warehouse coverage if 2024 is empty
 
-## M05
-python -m ml_scan.cli universe snapshot --source "C:\Users\mail2\OneDrive\projects2\scan_trade\data\universe\nifty500_mapped.csv"
-# expect: data/universe/nifty500_mapped.csv exists, ~495 rows
-
-## M06
-python -m ml_scan.cli universe liquid --adtv-min 50000000 --smoke-n 8 --out data/universe/liquid_universe.csv
-# expect: passed==True rows; smoke file also written
+## Training universe
+# Symbol list is owned by scan_trade (`model_training_symbol.csv`). Set this path once;
+# M09+ feature build and M17 scan use it. M05 (Nifty snapshot), M06 (ADTV liquid/smoke),
+# and M25 (liquid e2e) are skipped — not part of the training path.
+$UNI = "C:\Users\mail2\OneDrive\projects2\scan_trade\data\universe\model_training_symbol.csv"
 
 ## M07
 python -m ml_scan.cli data align --symbols RELIANCE,TCS --start 2025-09-01 --end 2026-09-03 --out data/artifacts/align_smoke.parquet
@@ -47,7 +45,7 @@ python -m pytest tests/test_ta_engine_parity.py -q
 # expect: pass vs copied helper on a fixture hourly CSV
 
 ## M09
-python -m ml_scan.cli features hourly --universe data/universe/smoke_symbols.csv --start 2025-09-01 --end 2026-09-03 --out data/artifacts/feat_hourly_smoke.parquet
+python -m ml_scan.cli features hourly --universe $UNI --start 2025-09-01 --end 2026-09-03 --out data/artifacts/feat_hourly_smoke.parquet
 # expect: MultiIndex (symbol, ts); full pandas_ta matrix (200+ indicator columns); no cross-symbol NaN bleed
 
 ## M10
@@ -77,7 +75,7 @@ python -m ml_scan.cli ml train --in data/artifacts/labeled_smoke.parquet --featu
 # expect: fold metrics JSON beside model
 
 ## M17
-python -m ml_scan.cli scan --asof latest --universe data/universe/smoke_symbols.csv --out data/artifacts/scan_latest.csv
+python -m ml_scan.cli scan --asof latest --universe $UNI --out data/artifacts/scan_latest.csv
 # expect: columns symbol,asof_ts,score,entry_px,sl_px,tp_px
 
 ## M18
@@ -105,10 +103,6 @@ python -m ml_scan.cli --help
 ## M24
 python -m ml_scan.cli e2e smoke
 # expect: exit 0; artifacts under data/artifacts/e2e_smoke/
-
-## M25
-python -m ml_scan.cli e2e liquid --max-symbols 80
-# expect: scan + backtest artifacts; user_command.md still matches these commands
 
 ## Diagnostics — accuracy investigation (see user_command.ipynb M09b/M12b/M13b/M14b/M15b/M16a/M16b)
 

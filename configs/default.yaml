@@ -1,25 +1,15 @@
 universe:
-  index_name: NIFTY500
-  constituents_url: https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv
-  series: EQ
   benchmark_symbol: "NIFTY 50"
-  exchange: NSE
 
 data:
-  daily_days: 730
   hourly_days: 730
   minute15_days: 90
   smoke_hourly_days: 90
-  parquet_export_dir: data/artifacts
 
 timescale:
   host: localhost
   port: 5433
   db: scan_trade
-  chunk_5m: 7d
-  compress_after: 14d
-  cagg_refresh_minutes: 1
-  ca_rel_diff: 0.02
 
 liquidity:
   adtv_window: 20
@@ -76,8 +66,6 @@ costs:
   ipft_per_crore: 0.01
 
 backtest:
-  fill: next_open
   stop_wins_same_bar: true
   rf_annual: 0.0
   trading_days_per_year: 252
-  max_dd_constraint: -0.25

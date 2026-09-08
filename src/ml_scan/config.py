@@ -43,29 +43,19 @@ class Secrets(BaseSettings):
 
 
 class UniverseConfig(BaseModel):
-    index_name: str = "NIFTY500"
-    constituents_url: str = "https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv"
-    series: str = "EQ"
     benchmark_symbol: str = "NIFTY 50"
-    exchange: str = "NSE"
 
 
 class DataConfig(BaseModel):
-    daily_days: int = 730
     hourly_days: int = 730
     minute15_days: int = 90
     smoke_hourly_days: int = 90
-    parquet_export_dir: str = "data/artifacts"
 
 
 class TimescaleConfig(BaseModel):
     host: str = "localhost"
     port: int = 5433
     db: str = ALLOWED_TIMESCALE_DB
-    chunk_5m: str = "7d"
-    compress_after: str = "14d"
-    cagg_refresh_minutes: int = 1
-    ca_rel_diff: float = 0.02
     user: str = "scan_trade"
     password: str = ""
 
@@ -140,11 +130,9 @@ class CostsConfig(BaseModel):
 
 
 class BacktestConfig(BaseModel):
-    fill: str = "next_open"
     stop_wins_same_bar: bool = True
     rf_annual: float = 0.0
     trading_days_per_year: int = 252
-    max_dd_constraint: float = -0.25
 
 
 class Settings(BaseModel):
